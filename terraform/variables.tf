@@ -1,16 +1,14 @@
-variable "subscription_id" {
-  description = "Azure Subscription ID"
+variable "vnet_name" {
+  description = "Virtual Network name"
   type        = string
+  default     = "hyrcania-vnet"
 }
 
-variable "location" {
-  description = "Azure Region"
-  type        = string
-  default     = "Sweden Central"
-}
+variable "vnet_address_space" {
+  description = "Address space for the Virtual Network"
+  type        = list(string)
 
-variable "resource_group_name" {
-  description = "Resource Group Name"
-  type        = string
-  default     = "hyrcania-rg"
+  default = [
+    "10.0.0.0/16"
+  ]
 }
