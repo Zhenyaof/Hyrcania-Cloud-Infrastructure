@@ -1,0 +1,3 @@
+subscription_id    = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+location           = "Sweden Central"
+resource_group_name = "hyrcania-rg"
