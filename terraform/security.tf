@@ -58,3 +58,23 @@ resource "azurerm_network_security_rule" "https" {
   resource_group_name         = azurerm_resource_group.main.name
   network_security_group_name = azurerm_network_security_group.nsg["web"].name
 }
+
+resource "azurerm_subnet_network_security_group_association" "management" {
+  subnet_id                 = azurerm_subnet.management.id
+  network_security_group_id = azurerm_network_security_group.nsg["management"].id
+}
+
+resource "azurerm_subnet_network_security_group_association" "web" {
+  subnet_id                 = azurerm_subnet.web.id
+  network_security_group_id = azurerm_network_security_group.nsg["web"].id
+}
+
+resource "azurerm_subnet_network_security_group_association" "application" {
+  subnet_id                 = azurerm_subnet.application.id
+  network_security_group_id = azurerm_network_security_group.nsg["application"].id
+}
+
+resource "azurerm_subnet_network_security_group_association" "database" {
+  subnet_id                 = azurerm_subnet.database.id
+  network_security_group_id = azurerm_network_security_group.nsg["database"].id
+}
