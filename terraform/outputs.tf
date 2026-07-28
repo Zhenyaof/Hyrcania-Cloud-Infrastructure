@@ -70,3 +70,10 @@ output "container_registry_login_server" {
 output "container_registry_admin_username" {
   value = azurerm_container_registry.main.admin_username
 }
+output "load_balancer_name" {
+  value = azurerm_lb.main.name
+}
+
+output "load_balancer_public_ip" {
+  value = azurerm_public_ip.lb.ip_address
+}
