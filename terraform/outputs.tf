@@ -59,3 +59,14 @@ output "log_analytics_workspace_name" {
 output "log_analytics_workspace_id" {
   value = azurerm_log_analytics_workspace.main.id
 }
+output "container_registry_name" {
+  value = azurerm_container_registry.main.name
+}
+
+output "container_registry_login_server" {
+  value = azurerm_container_registry.main.login_server
+}
+
+output "container_registry_admin_username" {
+  value = azurerm_container_registry.main.admin_username
+}
