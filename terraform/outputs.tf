@@ -52,3 +52,10 @@ output "vm_public_ip" {
 output "vm_private_ip" {
   value = azurerm_network_interface.vm.private_ip_address
 }
+output "log_analytics_workspace_name" {
+  value = azurerm_log_analytics_workspace.main.name
+}
+
+output "log_analytics_workspace_id" {
+  value = azurerm_log_analytics_workspace.main.id
+}
