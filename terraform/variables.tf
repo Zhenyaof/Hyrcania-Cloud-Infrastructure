@@ -12,3 +12,11 @@ variable "vnet_address_space" {
     "10.0.0.0/16"
   ]
 }
+
+variable "ssh_public_key" {
+  description = "SSH public key"
+
+  type = string
+
+  default = "ssh-rsa YOUR_PUBLIC_KEY"
+}
