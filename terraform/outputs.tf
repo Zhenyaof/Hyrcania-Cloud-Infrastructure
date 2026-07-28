@@ -105,3 +105,10 @@ output "recovery_services_vault_name" {
 output "backup_policy_name" {
   value = azurerm_backup_policy_vm.daily.name
 }
+output "aks_cluster_name" {
+  value = azurerm_kubernetes_cluster.main.name
+}
+
+output "aks_fqdn" {
+  value = azurerm_kubernetes_cluster.main.fqdn
+}
