@@ -91,3 +91,10 @@ output "firewall_name" {
 output "firewall_public_ip" {
   value = azurerm_public_ip.firewall.ip_address
 }
+output "vpn_gateway_name" {
+  value = azurerm_virtual_network_gateway.main.name
+}
+
+output "vpn_gateway_public_ip" {
+  value = azurerm_public_ip.vpn.ip_address
+}
