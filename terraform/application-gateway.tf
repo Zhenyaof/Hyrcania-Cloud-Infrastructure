@@ -22,7 +22,7 @@ resource "azurerm_application_gateway" "main" {
 
   gateway_ip_configuration {
     name      = "gateway-ip-config"
-    subnet_id = azurerm_subnet.application.id
+    subnet_id = subnet_id = azurerm_subnet.application_gateway.id
   }
 
   frontend_port {

@@ -19,7 +19,7 @@ resource "azurerm_firewall" "main" {
 
   ip_configuration {
     name                 = "firewall-ip-config"
-    subnet_id            = azurerm_subnet.bastion.id
+    subnet_id            = subnet_id = azurerm_subnet.firewall.id
     public_ip_address_id = azurerm_public_ip.firewall.id
   }
 
