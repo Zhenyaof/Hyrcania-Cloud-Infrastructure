@@ -98,3 +98,10 @@ output "vpn_gateway_name" {
 output "vpn_gateway_public_ip" {
   value = azurerm_public_ip.vpn.ip_address
 }
+output "recovery_services_vault_name" {
+  value = azurerm_recovery_services_vault.main.name
+}
+
+output "backup_policy_name" {
+  value = azurerm_backup_policy_vm.daily.name
+}
