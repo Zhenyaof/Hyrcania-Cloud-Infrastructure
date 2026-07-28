@@ -25,3 +25,19 @@ output "database_subnet_id" {
 output "bastion_subnet_id" {
   value = azurerm_subnet.bastion.id
 }
+
+output "storage_account_name" {
+  value = azurerm_storage_account.main.name
+}
+
+output "storage_account_id" {
+  value = azurerm_storage_account.main.id
+}
+
+output "blob_container_name" {
+  value = azurerm_storage_container.blob.name
+}
+
+output "file_share_name" {
+  value = azurerm_storage_share.files.name
+}
