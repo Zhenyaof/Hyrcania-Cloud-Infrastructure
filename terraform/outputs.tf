@@ -41,3 +41,14 @@ output "blob_container_name" {
 output "file_share_name" {
   value = azurerm_storage_share.files.name
 }
+output "vm_name" {
+  value = azurerm_linux_virtual_machine.main.name
+}
+
+output "vm_public_ip" {
+  value = azurerm_public_ip.vm.ip_address
+}
+
+output "vm_private_ip" {
+  value = azurerm_network_interface.vm.private_ip_address
+}
