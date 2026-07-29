@@ -1,193 +1,297 @@
-# Hyrcania Cloud Infrastructure - Docker
+# Hyrcania Cloud Infrastructure - Docker Implementation
 
 ## Overview
 
-This directory contains the Docker implementation of the Hyrcania Cloud Infrastructure project.
+This directory contains the Docker configuration used to containerize and run application workloads for the Hyrcania Cloud Infrastructure project.
 
-The objective of this section is to containerize the application, manage multiple services using Docker Compose, implement basic container security practices, and prepare the application for future cloud deployment using Azure Container Registry (ACR) and Azure Kubernetes Service (AKS).
+The Docker implementation demonstrates application containerization using:
 
----
-
-# Docker Architecture
-
-                     Docker Host
-
-                          |
-
-                hyrcania-network
-
-                          |
-
-          +---------------+---------------+
-
-          |                               |
-
-          ▼                               ▼
+- Docker images
+- Docker containers
+- Docker Compose
+- Container networking
+- Persistent storage
+- Environment configuration
+- Health monitoring
 
 
-   Hyrcania Application             PostgreSQL Database
-
-   Flask Container                  PostgreSQL 16 Container
-
-
-          |                               |
-
-          |                               |
-
-          +---------------+---------------+
-
-                          |
-
-                Persistent Volume
+Docker provides a consistent runtime environment and allows applications to be packaged and deployed independently from the underlying infrastructure.
 
 ---
 
-# Project Structure
+# Container Architecture
+
+The Docker architecture consists of an application container and a database container.
+
+```
+                    User
+
+                     |
+
+                     |
+
+              Application Container
+
+                     |
+
+                     |
+
+              Docker Network
+
+                     |
+
+                     |
+
+              PostgreSQL Database
+
+                     |
+
+                     |
+
+              Persistent Volume
+```
+
+The architecture separates:
+
+- Application layer
+- Database layer
+- Storage layer
 
 
+This improves:
+
+- Maintainability
+- Scalability
+- Portability
+- Deployment consistency
+
+---
+
+# Docker Project Structure
+
+```
 docker/
 
+├── app/
+│   ├── app.py
+│   └── requirements.txt
+│
 ├── Dockerfile
 ├── docker-compose.yml
 ├── .dockerignore
-├── .gitignore
 ├── .env.example
-├── README.md
-├── IMAGE_VERSIONING.md
-├── ACR_WORKFLOW.md
-│
-└── app/
-│
-├── app.py
-└── requirements.txt
-
+└── README.md
+```
 
 ---
 
-# Application Stack
+# File Overview
 
-## Application Layer
+| File | Purpose |
+|---|---|
+| Dockerfile | Defines the application container image |
+| docker-compose.yml | Defines multi-container deployment |
+| app/app.py | Application source code |
+| app/requirements.txt | Python dependencies |
+| .dockerignore | Excludes unnecessary files from image builds |
+| .env.example | Example environment configuration |
+| README.md | Docker documentation |
 
-The application is built using:
+---
 
-- Python 3.12
-- Flask Framework
-- REST API endpoints
-- PostgreSQL connectivity
+# Application Container
+
+The application is packaged into a Docker image.
+
+Dockerfile responsibilities:
+
+- Select base image
+- Install dependencies
+- Copy application code
+- Configure runtime environment
+- Start application service
 
 
-## Database Layer
+Application workflow:
 
-The database service uses:
+```
+Application Code
+
+        |
+
+        |
+
+Dockerfile
+
+        |
+
+        |
+
+Docker Image
+
+        |
+
+        |
+
+Docker Container
+```
+
+---
+
+# Docker Image Creation
+
+The application image is built using:
+
+```bash
+docker build -t hyrcania-app .
+```
+
+This command:
+
+- Reads the Dockerfile
+- Installs dependencies
+- Creates a reusable image
+- Tags the image as `hyrcania-app`
+
+---
+
+# Running the Application Container
+
+The container can be started using:
+
+```bash
+docker run -d -p 8080:5000 --name hyrcania-app hyrcania-app
+```
+
+Explanation:
+
+| Option | Purpose |
+|---|---|
+| -d | Runs container in background |
+| -p | Maps host port to container port |
+| --name | Assigns container name |
+
+Example:
+
+```
+Host
+
+8080
+
+ |
+
+ |
+
+Container
+
+5000
+```
+
+---
+
+# Docker Compose Architecture
+
+Docker Compose manages multiple containers as one application stack.
+
+The Hyrcania Docker environment includes:
+
+```
+docker-compose.yml
+
+        |
+
+        |
+
++----------------+
+
+| Application    |
+
+| Container      |
+
++----------------+
+
+        |
+
+        |
+
++----------------+
+
+| PostgreSQL     |
+
+| Database       |
+
++----------------+
+```
+
+---
+
+# PostgreSQL Database Container
+
+The database container provides persistent data storage.
+
+Implemented:
 
 - PostgreSQL 16
-- Docker managed volume
-- Internal container communication
+- Database environment variables
+- Persistent volume
+- Health check
 
 
----
+Database workflow:
 
-# Dockerfile Implementation
+```
+Application
 
-The Dockerfile creates a custom application image.
+     |
 
-Implemented features:
+     |
 
-- Python slim base image
-- Dependency installation
-- Application packaging
-- Non-root execution
-- Optimized container environment
+PostgreSQL Container
 
+     |
 
-Security improvement:
+     |
 
-Instead of running the application as root:
-
-
-root user
-|
-|
-application
-
-
-The container runs with:
-
-
-hyrcania user
-|
-|
-application
-
-
-Reducing potential security impact.
+Persistent Storage Volume
+```
 
 ---
 
-# Docker Compose Implementation
+# Docker Networking
 
-Docker Compose manages the complete application stack.
+Docker Compose automatically creates a private network.
 
-Implemented services:
+Communication:
 
-## hyrcania-app
+```
+Application Container
 
-Responsibilities:
+          |
 
-- Runs Flask application
-- Exposes application API
-- Connects to PostgreSQL database
-- Provides health monitoring
+          |
 
+Docker Network
 
-## hyrcania-db
+          |
 
-Responsibilities:
+          |
 
-- Runs PostgreSQL database
-- Stores application data
-- Provides persistent storage
+Database Container
+```
 
+Containers communicate using service names instead of public IP addresses.
 
----
+Example:
 
-# Networking
-
-Docker Compose creates a dedicated bridge network:
-
-
-hyrcania-network
-
-
-Communication flow:
-
-
-hyrcania-app
-
-  |
-
-  |
-
-hyrcania-db:5432
-
-
-The database is not exposed externally.
-
-Only the application is accessible:
-
-
-localhost:8080
-
+```
+DATABASE_HOST=db
+```
 
 ---
 
 # Persistent Storage
 
-PostgreSQL uses a Docker volume:
-
-
-postgres-data
-
+Database data is stored using Docker volumes.
 
 Purpose:
 
@@ -196,285 +300,287 @@ Purpose:
 - Separate storage from container lifecycle
 
 
-Example:
+Storage flow:
 
+```
+PostgreSQL Container
 
-Container Removed
+          |
 
-    |
+          |
 
-    |
+Docker Volume
 
-Volume Remains
+          |
 
-    |
+          |
 
-    |
-
-Database Data Preserved
-
+Persistent Data
+```
 
 ---
 
 # Environment Configuration
 
-Application configuration is separated from source code.
+Sensitive configuration is managed through environment variables.
 
 Example:
 
-
+```
 .env.example
-
+```
 
 Contains:
 
-- Application name
-- Runtime environment
-- Database host
-- Database port
 - Database name
 - Database username
-- Database password
+- Application configuration
 
 
-Actual environment files:
+Example:
 
+```env
+POSTGRES_DB=hyrcania
+POSTGRES_USER=admin
+POSTGRES_PASSWORD=example_password
+```
 
-.env
-
-
-are excluded from GitHub.
-
-Production environments should use:
-
-- Azure Key Vault
-- Kubernetes Secrets
-- Managed Identity
+Sensitive values should not be committed to GitHub.
 
 ---
 
-# Container Health Monitoring
+# Container Health Checks
 
-Health checks are implemented for both services.
+Health checks verify that services are running correctly.
 
+Example:
 
-## Application Health Check
+```
+Application Container
 
-Endpoint:
+        Status:
 
-
-GET /health
-
-
-Checks:
-
-- Flask availability
-- Database connection
+        Healthy
 
 
-Example response:
+Database Container
 
-```json
-{
-    "application": "hyrcania-app",
-    "database": "connected",
-    "status": "healthy"
-}
-Database Health Check
+        Status:
 
-PostgreSQL uses:
+        Healthy
+```
 
-pg_isready
+Health checks improve:
 
-to verify database availability.
+- Reliability
+- Troubleshooting
+- Service availability
 
-Docker Security Practices
+---
+
+# Docker Compose Commands
+
+## Start Services
+
+```bash
+docker compose up -d
+```
+
+Starts all containers in detached mode.
+
+---
+
+## Stop Services
+
+```bash
+docker compose down
+```
+
+Stops and removes containers.
+
+---
+
+## View Running Containers
+
+```bash
+docker ps
+```
+
+Shows active containers.
+
+---
+
+## View All Containers
+
+```bash
+docker ps -a
+```
+
+Shows running and stopped containers.
+
+---
+
+## View Container Logs
+
+```bash
+docker logs CONTAINER_NAME
+```
+
+Example:
+
+```bash
+docker logs hyrcania-app
+```
+
+---
+
+## Rebuild Containers
+
+```bash
+docker compose up -d --build
+```
+
+Rebuilds images and starts services.
+
+---
+
+## View Images
+
+```bash
+docker images
+```
+
+Displays available Docker images.
+
+---
+
+## Remove Images
+
+```bash
+docker rmi IMAGE_NAME
+```
+
+Removes unused images.
+
+---
+
+# Docker Workflow
+
+The complete Docker lifecycle:
+
+```
+Application Code
+
+        |
+
+        |
+
+Create Dockerfile
+
+        |
+
+        |
+
+Build Image
+
+        |
+
+        |
+
+Run Container
+
+        |
+
+        |
+
+Compose Multiple Services
+
+        |
+
+        |
+
+Deploy Application
+```
+
+---
+
+# Security Practices Applied
+
+The Docker implementation follows security practices:
 
 Implemented:
 
-Non-root container execution
+✅ Environment variables instead of hardcoded secrets  
+✅ .dockerignore configuration  
+✅ Separate database container  
+✅ Private container networking  
+✅ Health monitoring  
+✅ Minimal base image usage  
 
-Containers do not run with root privileges.
 
-Secret separation
+---
 
-Sensitive configuration is not stored inside:
+# Integration With Azure Infrastructure
 
-docker-compose.yml
+The Docker application is designed to integrate with the Azure infrastructure.
 
-Instead:
+Deployment flow:
 
-.env
+```
+Docker Application
 
-is used locally.
+        |
 
-.dockerignore
+        |
 
-Prevents unnecessary files from being included in Docker images.
+Container Registry
 
-Minimal base image
+        |
 
-Using:
+        |
 
-python:3.12-slim
+Azure Infrastructure
 
-reduces image size and attack surface.
+        |
 
-Running The Application
-Build Containers
-docker compose build
-Start Services
-docker compose up -d
-Check Containers
-docker ps
+        |
 
-Expected:
+Cloud Deployment
+```
 
-hyrcania-app     healthy
+The Docker layer provides the application runtime, while Terraform manages the cloud infrastructure.
 
-hyrcania-db      healthy
-View Logs
-docker logs hyrcania-app
-Stop Services
-docker compose down
-Testing
+---
 
-Application:
-
-http://localhost:8080
-
-Health endpoint:
-
-http://localhost:8080/health
-
-Expected:
-
-Application: Running
-
-Database: Connected
-
-Status: Healthy
-Docker Image Versioning
-
-Images use version tags instead of relying only on:
-
-latest
-
-Example:
-
-hyrcania-app:v1.0.0
-
-Version format:
-
-MAJOR.MINOR.PATCH
-
-Example:
-
-v1.0.0
-
-Initial release
-
-v1.1.0
-
-New features
-
-v1.0.1
-
-Bug fixes
-
-Azure Container Registry (ACR) Workflow
-
-Future cloud workflow:
-
-Developer
-
-    |
-
-    |
-
-Docker Build
-
-    |
-
-    |
-
-Docker Image
-
-    |
-
-    |
-
-Azure Container Registry
-
-    |
-
-    |
-
-Azure Kubernetes Service
-
-    |
-
-    |
-
-Application Gateway
-
-    |
-
-    |
-
-Users
-
-Example commands:
-
-Build:
-
-docker build -t hyrcania-app .
-
-Tag:
-
-docker tag hyrcania-app \
-hyrcaniaregistry.azurecr.io/hyrcania-app:v1.0.0
-
-Push:
-
-docker push \
-hyrcaniaregistry.azurecr.io/hyrcania-app:v1.0.0
-Current Docker Achievements
+# Project Status
 
 Completed:
 
-✅ Flask application container
-✅ PostgreSQL database container
-✅ Docker Compose orchestration
-✅ Custom Docker network
-✅ Persistent storage
-✅ Environment configuration
-✅ Health checks
-✅ Non-root security model
-✅ Image versioning strategy
-✅ ACR deployment workflow preparation
+✅ Application Containerization  
+✅ Docker Image Creation  
+✅ Docker Compose Deployment  
+✅ PostgreSQL Integration  
+✅ Container Networking  
+✅ Persistent Storage  
+✅ Environment Configuration  
+✅ Health Checks  
 
-Future Integration
 
-Docker will later integrate with:
+---
 
-Terraform
-    |
-    |
-Azure Infrastructure
+# Future Improvements
 
-+
+Possible improvements:
 
-Docker
-    |
-    |
-Application Containers
+- Azure Container Registry automation
+- CI/CD pipeline integration
+- Container security scanning
+- Kubernetes deployment
+- Production image optimization
 
-+
 
-AKS
-    |
-    |
-Production Kubernetes Deployment
+---
 
-Hyrcania Cloud Infrastructure Cloud Engineering Portfolio Project
+# Hyrcania Cloud Infrastructure
+
+Cloud Engineering Portfolio Project
