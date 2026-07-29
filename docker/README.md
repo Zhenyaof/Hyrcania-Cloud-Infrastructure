@@ -476,9 +476,5 @@ AKS
     |
     |
 Production Kubernetes Deployment
-Hyrcania Cloud Infrastructure
 
-Cloud Engineering Portfolio Project
-
-
-This is the **single integrated Docker README** I would keep in the repository. It is much closer to a real engineering project document.
+Hyrcania Cloud Infrastructure Cloud Engineering Portfolio Project
