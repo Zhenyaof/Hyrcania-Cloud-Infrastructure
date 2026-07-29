@@ -10,20 +10,48 @@ services:
       - "8080:5000"
 
     environment:
-      APP_ENV: production
       APP_NAME: Hyrcania
+      APP_ENV: production
+      DATABASE_HOST: hyrcania-db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: hyrcania
+      DATABASE_USER: admin
+      DATABASE_PASSWORD: password
+
+    depends_on:
+      - hyrcania-db
 
     restart: unless-stopped
-
-    volumes:
-      - app-data:/app/data
 
     networks:
       - hyrcania-network
 
+
+  hyrcania-db:
+    image: postgres:16
+
+    container_name: hyrcania-db
+
+    environment:
+      POSTGRES_DB: hyrcania
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+    restart: unless-stopped
+
+    networks:
+      - hyrcania-network
+
+
 volumes:
-  app-data:
+
+  postgres-data:
+
 
 networks:
+
   hyrcania-network:
     driver: bridge
