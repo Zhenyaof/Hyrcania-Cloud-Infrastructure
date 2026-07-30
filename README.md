@@ -373,8 +373,8 @@ Hyrcania-Cloud-Infrastructure/
 │   ├── Architecture documentation
 │   └── Deployment guide
 │
-├── diagrams/
-│   └── Architecture diagrams
+├
+│   
 │
 ├── screenshots/
 │   ├── azure/
