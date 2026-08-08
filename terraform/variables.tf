@@ -20,3 +20,20 @@ variable "ssh_public_key" {
 
   default = "ssh-rsa YOUR_PUBLIC_KEY"
 }
+
+variable "subscription_id" {
+  description = "Azure subscription ID"
+  type        = string
+  sensitive   = true
+}
+variable "resource_group_name" {
+  description = "Azure Resource Group name"
+  type        = string
+  default     = "hyrcania-rg"
+}
+
+variable "location" {
+  description = "Azure region"
+  type        = string
+  default     = "West Europe"
+}
