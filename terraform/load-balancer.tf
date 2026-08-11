@@ -32,21 +32,21 @@ resource "azurerm_lb_probe" "http" {
   name            = "HTTP-Probe"
   loadbalancer_id = azurerm_lb.main.id
 
-  protocol = "Http"
-  port     = 80
+  protocol     = "Http"
+  port         = 80
   request_path = "/"
 }
 
 resource "azurerm_lb_rule" "http" {
-  name                           = "HTTP"
-  loadbalancer_id                = azurerm_lb.main.id
-  protocol                       = "Tcp"
+  name            = "HTTP"
+  loadbalancer_id = azurerm_lb.main.id
+  protocol        = "Tcp"
 
   frontend_port = 80
   backend_port  = 80
 
   frontend_ip_configuration_name = "PublicFrontend"
-  backend_address_pool_ids       = [
+  backend_address_pool_ids = [
     azurerm_lb_backend_address_pool.main.id
   ]
 
