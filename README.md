@@ -2,150 +2,122 @@
 
 ## Project Overview
 
-Hyrcania Cloud Infrastructure is an end-to-end cloud engineering project that demonstrates the design, automation, security, and documentation of a production-inspired cloud environment.
+**Hyrcania Cloud Infrastructure** is an end-to-end cloud engineering and DevOps project designed to demonstrate how a modern application infrastructure can be designed, automated, secured, validated, and operated using industry-standard technologies.
 
-The project focuses on building a secure, scalable, and maintainable infrastructure using:
+The project combines:
 
 - Microsoft Azure
 - Terraform Infrastructure as Code
 - GitHub Actions CI/CD
 - Microsoft Entra ID and Azure OIDC
-- Docker containerization
-- Linux administration
-- Cloud networking and security principles
+- Docker and Docker Compose
+- Python
+- PostgreSQL
+- Ubuntu Linux
+- Cloud networking and security
+- Monitoring and backup
 
-The main objective is to simulate how a real-world organization could design and manage cloud infrastructure using automated, repeatable, and version-controlled processes.
+The project follows a production-inspired approach where infrastructure is defined as code, changes are validated automatically, Terraform plans are reviewed before deployment, and cloud authentication is handled through federated identity.
+
+The current development configuration is intentionally **cost-controlled**: the CI/CD pipeline validates and plans infrastructure without automatically maintaining billable Azure resources.
 
 ---
 
-# Project Motivation
+# Project Goals
 
-Modern applications require infrastructure that is secure, scalable, and easy to maintain.
+The primary goals of the project are to demonstrate practical knowledge of:
 
-Manually creating cloud resources can lead to configuration inconsistencies and makes environments difficult to reproduce.
-
-This project demonstrates how a cloud environment can be designed and managed using modern engineering practices:
-
+- Cloud infrastructure design
 - Infrastructure as Code
-- Cloud networking principles
-- Containerized application deployment
-- Security-focused architecture
-- CI/CD automation
-- Version-controlled infrastructure
-- Controlled deployment workflows
+- Terraform automation
+- CI/CD engineering
+- Azure networking
+- Cloud security
+- OIDC authentication
+- Containerized applications
+- Linux administration
+- Monitoring and reliability
+- Infrastructure change management
+- Cost-aware cloud engineering
 
-The goal is to simulate a real-world cloud infrastructure environment where infrastructure changes can be validated, reviewed, and deployed through an automated workflow.
-
----
-
-# Architecture Overview
-
-The infrastructure is designed around several major layers.
-
-## Cloud Infrastructure Layer
-
-Microsoft Azure provides the foundation of the environment.
-
-The Azure infrastructure includes:
-
-- Azure Virtual Network
-- Subnet segmentation
-- Network Security Groups
-- Azure Firewall
-- Application Gateway
-- Load Balancer
-- Ubuntu Virtual Machine
-- Storage services
-- Monitoring and backup solutions
-
-The infrastructure is defined using Terraform and can be provisioned when a deployment environment is intentionally enabled.
+The project is designed to simulate how an engineering team could manage application infrastructure through a controlled and repeatable workflow.
 
 ---
 
-## Infrastructure as Code Layer
+# Unified Architecture
 
-Terraform is used to define and automate Azure infrastructure.
+The project is organized as a single cloud engineering system rather than separate infrastructure and application components.
 
-Instead of manually creating resources through the Azure Portal, infrastructure is defined as code and stored in Git.
+The complete flow is:
 
-Benefits:
+**Developer → GitHub → CI/CD → Terraform → Azure → Networking → Application Platform → Database → Monitoring**
 
-- Version-controlled infrastructure
-- Repeatable deployments
-- Reduced configuration errors
-- Easier maintenance
-- Automated infrastructure validation
-- Infrastructure change tracking
+```mermaid
+flowchart TD
 
-Terraform documentation:
+    Developer[Developer]
 
-➡️ [Terraform Documentation](https://github.com/Zhenyaof/Hyrcania-Cloud-Infrastructure/blob/main/terraform/README.md)
+    GitHub[GitHub Repository]
 
----
+    CI[GitHub Actions CI/CD]
 
-## CI/CD Layer
+    Terraform[Terraform Infrastructure as Code]
 
-GitHub Actions is used to automate Terraform validation and infrastructure change review.
+    OIDC[Azure OIDC Authentication]
 
-The CI/CD workflow includes:
+    Azure[Microsoft Azure]
 
-- Terraform formatting checks
-- Terraform validation
-- Terraform plan
-- Terraform plan artifacts
-- Azure OIDC authentication
-- GitHub Environment protection
-- Manual approval
-- Terraform plan review
+    VNet[Azure Virtual Network]
 
-The current pipeline is intentionally configured as a plan-only workflow to prevent accidental Azure infrastructure deployment and unnecessary cloud costs during development.
+    AppGW[Azure Application Gateway]
+    Firewall[Azure Firewall]
+    LB[Azure Load Balancer]
 
----
+    AppSubnet[Application Subnet]
+    DBSubnet[Database Subnet]
+    MgmtSubnet[Management Subnet]
+    GatewaySubnet[Gateway Subnet]
 
-## Application Platform Layer
+    VM[Ubuntu Linux VM]
 
-The application environment is deployed using Docker.
+    Docker[Docker Platform]
+    App[Python Application]
+    PostgreSQL[(PostgreSQL Database)]
 
-The containerized architecture includes:
+    Monitor[Azure Monitor]
+    Logs[Log Analytics Workspace]
+    Backup[Recovery Services Vault]
 
-- Python application container
-- PostgreSQL database container
-- Docker Compose orchestration
-- Container networking
-- Health monitoring
+    Developer --> GitHub
 
-Docker documentation:
+    GitHub --> CI
 
-➡️ [Docker Documentation](https://github.com/Zhenyaof/Hyrcania-Cloud-Infrastructure/blob/main/docker/README.md)
+    CI --> Terraform
+    CI --> OIDC
 
----
+    OIDC --> Azure
+    Terraform --> Azure
 
-# High-Level Architecture
+    Azure --> VNet
 
-The infrastructure follows a layered cloud architecture:
+    VNet --> AppGW
+    VNet --> Firewall
+    VNet --> LB
 
-```text
-Internet
-   |
-   v
-Azure Application Gateway
-   |
-   v
-Azure Firewall
-   |
-   v
-Azure Virtual Network
-   |
-   +----------------------+----------------------+
-   |                      |                      |
-   v                      v                      v
-Application Subnet    Database Subnet     Management Subnet
-   |                      |                      |
-   v                      v                      v
-Ubuntu VM              Database            Management
-   |
-   v
-Load Balancer
-   |
-   v
-Monitoring / Logging
+    VNet --> AppSubnet
+    VNet --> DBSubnet
+    VNet --> MgmtSubnet
+    VNet --> GatewaySubnet
+
+    AppSubnet --> VM
+    VM --> Docker
+
+    Docker --> App
+    Docker --> PostgreSQL
+
+    DBSubnet --> PostgreSQL
+
+    VNet --> Monitor
+    Monitor --> Logs
+
+    VNet --> Backup
