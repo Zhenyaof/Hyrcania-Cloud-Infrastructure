@@ -57,7 +57,7 @@ jobs:
           path: terraform/tfplan
 
   terraform-cd:
-    name: Terraform CD - Apply
+    name: Terraform CD - Plan Review
     needs: terraform-ci
     runs-on: ubuntu-latest
 
@@ -99,14 +99,9 @@ jobs:
         working-directory: terraform
         run: terraform show -no-color tfplan
 
-      - name: Terraform Apply
-        working-directory: terraform
-        env:
-          TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
-        run: terraform apply -input=false tfplan
-
-      - name: Deployment Success
+      - name: Deployment Gate Complete
         run: |
-          echo "Terraform deployment completed successfully."
-          echo "Azure infrastructure has been updated."
+          echo "Manual approval received."
+          echo "This pipeline is PLAN-ONLY."
+          echo "Terraform Apply is intentionally disabled."
+          echo "No Azure infrastructure was deployed."
