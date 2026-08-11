@@ -57,9 +57,12 @@ jobs:
           path: terraform/tfplan
 
   terraform-cd:
-    name: Terraform CD - Plan Review
+    name: Terraform CD - Manual Approval
     needs: terraform-ci
     runs-on: ubuntu-latest
+
+    environment:
+      name: production
 
     steps:
       - name: Checkout
@@ -85,7 +88,7 @@ jobs:
         working-directory: terraform
         run: terraform init -backend=false
 
-      - name: Verify Terraform Plan Artifact
+      - name: Verify Terraform Plan
         working-directory: terraform
         run: |
           echo "Terraform plan artifact downloaded successfully."
@@ -96,7 +99,8 @@ jobs:
         working-directory: terraform
         run: terraform show -no-color tfplan
 
-      - name: CD Success
+      - name: Approval Confirmed
         run: |
-          echo "Terraform plan was successfully reviewed."
+          echo "Manual approval received."
+          echo "Terraform apply is NOT configured yet."
           echo "No Azure resources were changed."
